@@ -1,0 +1,203 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+  <meta charset="UTF-8" />
+  <title>Phaser - Making your first game, part 1</title>
+  <script type="text/javascript" src="js/phaser.min.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+
+
+
+
+
+
+function preload() {
+
+    //  You can fill the preloader with as many assets as your game requires
+
+    //  Here we are loading an image. The first parameter is the unique
+    //  string by which we'll identify the image later in our code.
+
+    //  The second parameter is the URL of the image (relative)
+    game.load.image('star', 'followgam/hamburger.jpeg');
+    game.load.image('dude', 'followgam/jason.png', 100, 100);
+    game.load.spritesheet('pow','followgam/explode.png');
+
+     game.load.image('bullet', 'assets/games/invaders/bullet.png');
+   
+
+}
+
+var image;
+
+function create() {
+
+    stateText = game.add.text(game.world.centerX,game.world.centerY,' star', { font: '84px Arial', fill: '#fff' });
+    stateText.anchor.setTo(0.5, 0.9);
+    stateText.visible = false;
+
+
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+    
+    
+    cursors = game.input.keyboard.createCursorKeys();
+    
+    //  This creates a simple sprite that is using our loaded image and
+    //  displays it on-screen
+    //  and assign it to a variable
+    knocker = game.add.sprite(800, 500, 'star');
+
+  jason = game.add.sprite(10, 0, 'dude',2);
+
+jason1= game.add.sprite(600,0,'dude',4);
+
+jason2= game.add.sprite(300,0,'dude',2);
+
+
+    jason.width=100;
+    jason.height=100;
+
+    jason1.width=100;
+    jason1.height=100;
+
+     jason2.width=100;
+    jason2.height=100;
+
+    knocker.width=50;
+    knocker.height=50;
+
+   
+    
+   game.physics.enable([knocker,jason,jason1,jason2], Phaser.Physics.ARCADE);
+
+
+   // knocker.body.immovable = true;
+
+    //  This gets it moving
+    jason.body.velocity.setTo(100, 400);
+    
+    jason1.body.velocity.setTo(100, 400);
+
+     jason2.body.velocity.setTo(100, 400);
+
+
+    //  This makes the game world bounce-able
+    jason.body.collideWorldBounds = true;
+
+    jason1.body.collideWorldBounds = true;
+
+    jason2.body.collideWorldBounds = true;
+   
+
+    knocker.body.collideWorldBounds=true;
+    
+    //  This sets the image bounce energy for the horizontal 
+    //  and vertical vectors (as an x,y point). "1" is 100% energy return
+    jason.body.bounce.setTo(1, 1);
+
+     jason1.body.bounce.setTo(1, 1);
+
+ jason2.body.bounce.setTo(1, 1);
+
+   
+    
+
+}
+
+//  Move the knocker with the arrow keys
+function update () {
+
+    //  Enable physics between the knocker and the ball
+   
+    if(game.physics.arcade.collide(knocker, [jason,jason1,jason2],collisionHandler,null,this)){
+        killStar();
+
+ 
+    
+        }
+
+      
+
+
+    
+    else if (cursors.up.isDown)
+    {
+        knocker.body.velocity.y = -500;
+    }
+    else if (cursors.down.isDown)
+    {
+        knocker.body.velocity.y =  500;
+    }
+    else if (cursors.left.isDown)
+    {
+        knocker.body.velocity.x = -500;
+    }
+    else if (cursors.right.isDown)
+    {
+        knocker.body.velocity.x = 500;
+    } 
+    else
+    {
+        knocker.body.velocity.setTo(0, 0);
+    }
+
+
+     if (fireButton.isDown)
+        {
+            fireBullet();
+        }
+
+    
+}
+
+function killStar(){
+
+  knocker.kill();
+
+  stateText.text="I ate the Hamburger! \n\n     You Suck!";
+stateText.visible = true;
+  var x = Math.floor(Math.random()*800);
+  var y = Math.floor(Math.random()*600);
+
+     // game.add.sprite(x,y,'star');
+   // game.add.sprite(x,y,'dude');
+
+
+}
+
+function collisionHandler(){
+
+   game.stage.backgroundColor = '#992d2d';
+
+    
+}
+
+function render () {
+
+    //debug helper
+  //  game.debug.spriteInfo(jason, 32, 32);
+
+}
+
+function setupInvader (invader) {
+
+    invader.anchor.x = 0.5;
+    invader.anchor.y = 0.5;
+    invader.animations.add('pow');
+
+}
+
+
+</script>s
+</body>
+</html>
